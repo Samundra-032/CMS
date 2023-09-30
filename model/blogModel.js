@@ -1,6 +1,11 @@
 const mongoose = require('mongoose')
+
 //  const Schema = mongoose.Schema
-//  const userSchema=new Schema({})
+//  const userSchema=new Schema({
+
+//})
+
+
 const blogSchema = new mongoose.Schema({
     title : {
         type : String,
@@ -11,7 +16,7 @@ const blogSchema = new mongoose.Schema({
         type : String
     },
 
-    Description : {
+    description : {
         type : String
     }
 

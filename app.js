@@ -1,22 +1,35 @@
-const app = require("express")()
-
-const mongoose = require("mongoose")
-
-// //connect to database
-// //paste the string (ie.3)
+/*
+//connect to database
+//paste the string (ie.3)
 // mongoose.connect("mongodb+srv://tanjiro:Tanjiro@cluster0.n6twqg2.mongodb.net/?retryWrites=true&w=majority&appName=AtlasApp")
 // .then(()=>{
 //     console.log("DataBase Connected Successfully.......")
 // })
-
+*/
 
 const { connectDatabase } = require("./database/database")
+//const mongoose = require("mongoose")
 
+const Blog = require("./model/blogModel")
+
+//const app = require("express")()
+const express = require("express")
+const app = express()
+
+
+//parse the data coming from the form
+app.use(express.json())
+app.use(express.urlencoded({extended : true}))
+
+
+//DataBase Connection Function
 connectDatabase()
 
-port = 2000
+port = 3000
 
-//GET - API
+/*******************************
+            GET - API
+*******************************/
 app.get("/",(req,res)=>{
     res.json({
         status:200,
@@ -25,6 +38,57 @@ app.get("/",(req,res)=>{
 })
 
 
+//Alternative
+//res.status(200).json({ Message : "Blog created successfully",})
+
+
+
+/*******************************************
+            Create Blog API
+********************************************/
+app.post("/blog",async (req,res)=>{
+
+    // console.log(req.body)
+    // console.log(req.body.title)
+
+    const title = req.body.title
+    const subTitle = req.body.subTitle
+    const description = req.body.description
+
+    /*
+    //alternative --> object destructuring
+    //const {title, subTitle, description} = req.body
+
+    //Insert to database (logic goes here)
+    // await Blog.create({
+    //     title: req.body.title,
+    //     subTitle: req.body.subTitle,
+    //     description: req.body.description
+    // })
+    */
+
+    
+     
+    /***************************
+     * //if key and value is same then can write only once
+    title :title
+    sub_title : subtitle
+    description : description
+
+    * //can be written as 
+    *****************************************/
+    await Blog.create({
+        title,
+        subTitle,
+        description
+    })
+
+
+    res.json({
+        status : 201,
+        Message : "Blog created successfully",
+    })
+})
  
 app.listen(port, (res,req)=>{
     console.log(`Server is running on port ${port}`)
