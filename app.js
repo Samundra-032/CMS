@@ -38,6 +38,83 @@ app.get("/",(req,res)=>{
 })
 
 
+/*********************************** 
+    GET API => /blogs (All blogs)
+************************************/
+app.get("/blogs",async (req,res)=>{
+
+    /*********************************************************
+        fetching (reading all Blogs from Blog Model)
+    *********************************************************/
+   const blogs = await Blog.find()
+
+   if(blogs.length == 0){
+    // return   res.status(401).send('No blog found')
+    res.status(404).json({
+        //status: 404,
+        message:'no blog found'
+    })
+   }
+   else{
+    // return    res.status(200).send(blogs);
+    res.status(200).json({
+        //status : 200,
+        message :"Blogs fetched successful",
+        data : blogs
+    })
+
+   }
+
+    // res.json({
+    //     status : 200,
+    //     message : "Blog fetched successfully",
+    //     data : blogs
+    // })
+})
+
+
+
+/*********************************************************
+ *      GET API --> /blogs/:id (single Blog read)
+ *********************************************************/
+app.get('/blogs/:id', async(req , res )=>{
+    const id = req.params.id
+    //const {id} = req.params
+
+    // const  blog = await Blog.find({_id : id})
+    // if(blog.length == 0){
+    //     res.status(404).json({
+    //         message : `Blog not found from ${id}`,
+    //     })
+    // }
+    // else(
+    //     res.json({
+    //         status : 200,
+    //         message:"blog fetched succesfully" ,
+    //         data : blog
+    
+    //     })
+
+    // )
+
+    const blog = await Blog.findById(id)
+    if(!blog ){
+        res.status(404).json({
+            message : 'No such a blog exists!'
+        })
+    }else{
+        res.status(200).json({
+            message: "Blog successfully fetched",
+            data : blog
+        })
+    }
+
+})
+
+
+
+
+
 //Alternative
 //res.status(200).json({ Message : "Blog created successfully",})
 
@@ -90,6 +167,10 @@ app.post("/blog",async (req,res)=>{
     })
 })
  
+
+
+
+
 app.listen(port, (res,req)=>{
     console.log(`Server is running on port ${port}`)
 })
