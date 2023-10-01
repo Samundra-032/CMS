@@ -16,12 +16,15 @@ const Blog = require("./model/blogModel")
 const express = require("express")
 const app = express()
 
-
+//setting environment for external html css
+app.set('view engine', 'ejs')
 //parse the data coming from the form
 app.use(express.json())
 app.use(express.urlencoded({extended : true}))
 
 
+//for getting access of css and images
+app.use(express.static("public"))
 //DataBase Connection Function
 connectDatabase()
 
@@ -31,12 +34,21 @@ port = 3000
             GET - API
 *******************************/
 app.get("/",(req,res)=>{
-    res.json({
-        status:200,
-        message:"successful"
-    }) 
+    // res.json({
+    //     status:200,
+    //     message:"successful"
+    // }) 
+    res.render('home')//no need of views/home.ejs  --> render always point to views folder
 })
 
+
+
+/*******************************
+            GET - API   for ABOUT
+*******************************/
+app.get("/about",(req,res)=>{ 
+    res.render('about')//no need of views/home.ejs  --> render always point to views folder
+})
 
 /*********************************** 
     GET API => /blogs (All blogs)
