@@ -124,8 +124,74 @@ app.get('/blogs/:id', async(req , res )=>{
 })
 
 
+/*********************************************************
+ *                       UPDATE API 
+ *********************************************************/
+app.patch('/blogs/:id',async (req,res)=>{
+    const id = req.params.id 
+    const {title,subTitle,description} = req.body
+
+    /*******************************
+     * Checking the id exist or not
+     ********************************/
+    const isBlogFound = await Blog.find({
+        _id : id
+    })
 
 
+    if (!isBlogFound || !isBlogFound[0]){
+        return   res.status(404).json({
+            message:'no such a blog'
+        })
+    }
+
+    // if(title === title || subTitle === subTitlle || description === description){
+    //     return res.status(200).json({
+    //         message:"You haven't changed any thing in this blog"
+    //     })
+    // }
+    else{
+        await Blog.findByIdAndUpdate(id,{
+            title,
+            subTitle,
+            description
+        })
+
+        res.status(200).json({
+            message :"Updated Successfully!"
+        })
+    }
+
+
+
+})
+
+
+/*********************************************************
+ *                       Delete API 
+ *********************************************************/
+app.delete('/blogs/:id', async (req,res)=>{
+    const id = req.params.id
+    // const {id} = req.params
+
+    const isBlogFound = await Blog.find({
+        _id : id
+    })
+
+    if (!isBlogFound || !isBlogFound[0]){
+        return   res.status(404).json({
+            message:'no such a blog Please check your Id'
+        })
+    }
+    else{
+        await Blog.findByIdAndDelete(id)
+    
+        res.status(200).json({
+            message:"Deleted Successfully"
+        })
+    }
+
+})
 
 //Alternative
 //res.status(200).json({ Message : "Blog created successfully",})
@@ -135,7 +201,7 @@ app.get('/blogs/:id', async(req , res )=>{
 /*******************************************
             Create Blog API
 ********************************************/
-app.post("/blog",async (req,res)=>{
+app.post("/blogs",async (req,res)=>{
 
     // console.log(req.body)
     // console.log(req.body.title)
@@ -160,23 +226,36 @@ app.post("/blog",async (req,res)=>{
      
     /***************************
      * //if key and value is same then can write only once
-    title :title
-    sub_title : subtitle
-    description : description
+    title,
+    subTitle,
+    description
 
     * //can be written as 
     *****************************************/
-    await Blog.create({
-        title,
-        subTitle,
-        description
+    const titleBlogFound = await Blog.find({
+        title : title
     })
+    if(!titleBlogFound || !titleBlogFound[0]){
+        
+        await Blog.create({
+            title :title,
+            subTitle : subTitle,
+            description : description
+        })
+
+        res.json({
+            status : 201,
+            Message : "Blog created successfully",
+        })
+    }
+
+    else{
+        return   res.status(409).send("blog Title already exists")
+    }
 
 
-    res.json({
-        status : 201,
-        Message : "Blog created successfully",
-    })
+
+
 })
  
 

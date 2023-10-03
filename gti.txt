@@ -1,0 +1,5 @@
+git remote add origin https://github.com/Samundra-032/CMS.git
+
+git config --global user.email "075bei032.samundra@pcampus.edu.np"
+
+git config --global user.name "Samundra-032"
